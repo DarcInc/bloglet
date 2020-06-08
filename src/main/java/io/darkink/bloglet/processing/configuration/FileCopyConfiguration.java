@@ -19,7 +19,7 @@ import java.util.*;
 
 @Configuration
 public class FileCopyConfiguration {
-    @Value("${io.darkink.bloglet.processer.watchDir}")
+    @Value("${io.darkink.bloglet.processor.watchDir}")
     private String watchDirectory;
 
     @Value("${io.darkink.bloglet.processor.outputDir}")

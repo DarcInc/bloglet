@@ -20,7 +20,7 @@ import java.util.Map;
 public class SettingsService {
     Log log = LogFactory.getLog(SettingsService.class);
 
-    @Value("${io.darkink.bloglet.processer.watchDir}")
+    @Value("${io.darkink.bloglet.processor.watchDir}")
     private String watchDirectory;
 
     public SettingsService() {
