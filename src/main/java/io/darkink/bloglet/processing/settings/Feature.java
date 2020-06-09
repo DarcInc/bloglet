@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Feature {
-    private String name;
-    private Map<String, String> settings;
+    private final String name;
+    private final Map<String, String> settings;
 
 
     public Feature(String name) {
