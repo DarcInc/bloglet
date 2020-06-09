@@ -1,5 +1,8 @@
 package io.darkink.bloglet.processing.settings;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +26,25 @@ public class SettingsService {
     @Value("${io.darkink.bloglet.processor.watchDir}")
     private String watchDirectory;
 
-    public SettingsService() {
-        log.info("Constructing Settings Service");
+    private final FeatureRepository featureRepository;
+
+    public SettingsService(FeatureRepository featureRepository) {
+        this.featureRepository = featureRepository;
+    }
+
+    private Feature readFeature(Path filePath) throws IOException {
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        mapper.findAndRegisterModules();
+
+        Map<String, String> data = mapper.readValue(filePath.toFile(), new TypeReference<Map<String, String>>(){});
+        String filename = filePath.getFileName().toString().replace(".yml", "");
+
+        Feature result = new Feature(filename);
+        for(Map.Entry<String, String> line : data.entrySet()) {
+            result.put(line.getKey(), line.getValue());
+        }
+
+        return result;
     }
 
     @PostConstruct
@@ -46,8 +66,7 @@ public class SettingsService {
                         log.info(String.format("Adding directory to search: %s", path.toAbsolutePath()));
                         work.add(path);
                     } else {
-                        //configFiles.put(path.toString(), path.toFile());
-                        log.info(String.format("Found Config file: %s", path.toString()));
+
                     }
                 });
             } catch (IOException ioe) {
